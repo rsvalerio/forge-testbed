@@ -1,0 +1,27 @@
+name: Publish homebrew formula
+
+# dist's `publish-jobs = ["./publish-homebrew"]` resolves a LOCAL workflow path, so this
+# file has to exist here even though its body lives in forge. It is also the reason the
+# file survives `dist generate` — dist rewrites release.yml, never this.
+
+on:
+  workflow_call:
+    inputs:
+      plan:
+        required: true
+        type: string
+
+jobs:
+  homebrew:
+    uses: rsvalerio/forge/.github/workflows/publish-homebrew.yml@main
+    with:
+      plan: ${{ inputs.plan }}
+      forge-ref: main
+      # Scratch tap, and dry-run on top of it. The workflow checks the tap out even in
+      # dry-run, so the repository must exist; dry-run then stops before the push, and the
+      # log shows the rendered formula and the commit it *would* have made.
+      tap-repository: rsvalerio/homebrew-tap-testbed
+      dry-run: true
+      app-client-id: ${{ vars.GH_APP_CLIENT_ID }}
+    secrets:
+      GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}

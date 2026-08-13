@@ -1,0 +1,23 @@
+[workspace]
+members = ["cargo:."]
+
+[dist]
+cargo-dist-version = "0.31.0"
+ci = "github"
+installers = ["shell", "homebrew"]
+# One target on purpose. The testbed proves the *path* works; it does not need to prove
+# that four cross-compilers work, and a full matrix on every forge change is minutes of
+# runner time bought for nothing.
+targets = ["x86_64-unknown-linux-gnu"]
+install-path = "CARGO_HOME"
+hosting = "github"
+unix-archive = ".tar.gz"
+install-updater = false
+# Scratch tap, never the production one (PLAN.md §7.3). The publish job checks the tap
+# out even under dry-run, so this repository has to exist.
+tap = "rsvalerio/homebrew-tap-testbed"
+publish-jobs = ["./publish-homebrew"]
+formula = "testbed-cli"
+# Same reasoning as ops: bump commits carry `[skip ci]`, GitHub applies that marker per
+# push event, and a tag push is a push event — so a tag-triggered release would never run.
+dispatch-releases = true

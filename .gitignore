@@ -1,0 +1,4 @@
+/target
+# Build residue from `make build` in packaging/.
+/packaging/stage
+/packaging/*.deb

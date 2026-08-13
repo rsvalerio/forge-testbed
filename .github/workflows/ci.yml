@@ -1,0 +1,16 @@
+name: CI
+
+# Every wrapper here pins @main, not a tag. That inversion is the whole point of this
+# repository: real consumers pin a release so a bad commit cannot break their pipeline,
+# and the testbed floats so a bad commit breaks *this* pipeline first.
+# See forge/docs/versioning.md §"The one exception".
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  rust:
+    uses: rsvalerio/forge/.github/workflows/rust-ci.yml@main

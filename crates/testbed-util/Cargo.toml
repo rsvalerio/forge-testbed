@@ -1,0 +1,12 @@
+[package]
+name = "testbed-util"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Middle crate of the forge testbed workspace: depends on testbed-core."
+authors.workspace = true
+
+[dependencies]
+testbed-core.workspace = true

@@ -1,0 +1,22 @@
+name: Publish crates
+
+# PERMANENTLY dry-run. crates.io publication is irreversible — a yanked version stays
+# visible forever and the name is claimed for good — so the testbed proves the workflow
+# resolves, orders the workspace correctly and passes `cargo publish`'s metadata checks,
+# and never once actually publishes. `allow-real-publish` is deliberately absent, not
+# merely false: forge requires both interlocks, so omitting it here means a single
+# accidental edit cannot reach the registry.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "42 5 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  crates:
+    uses: rsvalerio/forge/.github/workflows/publish-crates.yml@main
+    with:
+      dry-run: true

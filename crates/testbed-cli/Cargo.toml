@@ -1,0 +1,17 @@
+[package]
+name = "testbed-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Binary crate of the forge testbed workspace: the artifact dist releases."
+authors.workspace = true
+
+[dependencies]
+testbed-core.workspace = true
+testbed-util = { path = "../testbed-util", version = "0.1.0" }
+
+[[bin]]
+name = "testbed-cli"
+path = "src/main.rs"

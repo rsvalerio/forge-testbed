@@ -1,0 +1,36 @@
+name: Publish .deb
+
+# Not wired into release.yml: dist's custom publish jobs are handed a `plan` input, and
+# forge's publish-deb takes package-name/version instead, so it cannot be one. It runs on
+# a schedule and on demand, which is enough for a capability whose job is to prove the
+# path still works.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version label for the pool commit message.
+        required: false
+        type: string
+        default: ""
+  schedule:
+    # Daily. forge's main moves without this repository being touched, so a testbed that
+    # only ran on push would go stale exactly when it matters.
+    - cron: "27 5 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  deb:
+    uses: rsvalerio/forge/.github/workflows/publish-deb.yml@main
+    with:
+      package-name: testbed-cli
+      forge-ref: main
+      # Scratch apt repository, checked out even under dry-run — same as the tap.
+      apt-repository: rsvalerio/apt-testbed
+      dry-run: true
+      version: ${{ inputs.version }}
+      app-client-id: ${{ vars.GH_APP_CLIENT_ID }}
+    secrets:
+      GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}

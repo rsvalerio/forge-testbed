@@ -1,0 +1,32 @@
+# Cocogitto configuration for forge-testbed.
+#
+# Mirrors the shape forge's bump workflow expects from a consumer, because the point of
+# this repo is to find out when that expectation stops holding.
+
+from_latest_tag = true
+ignore_merge_commits = true
+skip_untracked = true
+
+tag_prefix = "v"
+
+skip_ci = "[skip ci]"
+
+pre_bump_hooks = [
+  "cargo set-version {{version}}",
+]
+
+# Deliberately empty, and forge's bump workflow now verifies that rather than assuming it.
+# In signed mode the commit is created through the GraphQL API; a `git push` hook here would
+# put an unsigned copy on main first and leave the branch ahead of the mutation's
+# expectedHeadOid, which surfaces as a confusing conflict rather than as this misconfiguration.
+post_bump_hooks = []
+
+[changelog]
+path = "CHANGELOG.md"
+template = "remote"
+remote = "github.com"
+repository = "forge-testbed"
+owner = "rsvalerio"
+authors = [
+  { signature = "Rodrigo Valerio", username = "rsvalerio" },
+]

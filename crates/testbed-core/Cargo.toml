@@ -1,0 +1,9 @@
+[package]
+name = "testbed-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Leaf crate of the forge testbed workspace: no internal dependencies."
+authors.workspace = true
