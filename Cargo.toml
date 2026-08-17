@@ -6,7 +6,7 @@ resolver = "2"
 # `license` or `description` fails publication late, during the release, which is exactly
 # the class of surprise this repository exists to absorb.
 [workspace.package]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 rust-version = "1.80"
 license = "MIT OR Apache-2.0"
@@ -18,4 +18,4 @@ authors = ["Rodrigo Valerio"]
 # Internal deps carry BOTH a path and a version. crates.io rejects bare path
 # dependencies, and a workspace that only ever builds locally never finds out —
 # forge/docs/consuming.md lists this as a precondition all three real repos fail today.
-testbed-core = { path = "crates/testbed-core", version = "0.1.0" }
+testbed-core = { path = "crates/testbed-core", version = "0.1.1" }

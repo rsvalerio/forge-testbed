@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.1.1](https://github.com/rsvalerio/forge-testbed/compare/20b310ed3c51efe9070e62a88c529533a5cc484c..v0.1.1) - 2026-08-17
+#### Bug Fixes
+- (**release**) grant contents: read to the custom publish job (#3) - ([7084843](https://github.com/rsvalerio/forge-testbed/commit/70848438ef91543ebe34b4de4ceafc5b5ac65422)) - Rodrigo Valeri
+#### Continuous Integration
+- (**bump**) exercise forge's major-tag repoint (#1) - ([20b310e](https://github.com/rsvalerio/forge-testbed/commit/20b310ed3c51efe9070e62a88c529533a5cc484c)) - Rodrigo Valeri
+
+- - -
+
 ## [v0.1.0](https://github.com/rsvalerio/forge-testbed/compare/fa5b50ec6279ec48f0959abc474a318a42529706..v0.1.0) - 2026-08-17
 #### Features
 - acceptance-test workspace consuming every forge capability - ([fa5b50e](https://github.com/rsvalerio/forge-testbed/commit/fa5b50ec6279ec48f0959abc474a318a42529706)) - [@rsvalerio](https://github.com/rsvalerio), Claude Opus 5 (1M context)

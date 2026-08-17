@@ -10,7 +10,7 @@ authors.workspace = true
 
 [dependencies]
 testbed-core.workspace = true
-testbed-util = { path = "../testbed-util", version = "0.1.0" }
+testbed-util = { path = "../testbed-util", version = "0.1.1" }
 
 [[bin]]
 name = "testbed-cli"
