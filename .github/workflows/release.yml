@@ -293,6 +293,26 @@ jobs:
     secrets: inherit
     # publish jobs get escalated permissions
     permissions:
+      # `contents: read` is NOT redundant with the workflow-level `contents: write`.
+      # A job-level `permissions:` block *replaces* the workflow-level set rather than
+      # extending it, so without this line `contents` is `none` for this job — and this
+      # job hands off to forge's publish-homebrew.yml, which declares
+      # `permissions: contents: read`. A called workflow may not request more than the
+      # calling job holds, so GitHub rejected the entire run before it started:
+      #
+      #   Invalid workflow file: .github/workflows/release.yml#L15
+      #   Error calling workflow 'rsvalerio/forge/.github/workflows/publish-homebrew.yml@main'.
+      #   The workflow is requesting 'contents: read', but is only allowed 'contents: none'.
+      #
+      # It surfaces as a `startup_failure`: no jobs, no log, just a red tick with
+      # nothing behind it. It killed every Release run this repo has ever had — three
+      # for three — including the dispatch that should have published v0.1.0.
+      #
+      # ops does not hit this because its publish-homebrew wrapper is entirely local:
+      # no called workflow, so no permission negotiation. Delegating to forge is what
+      # makes the grant necessary here, which is exactly the kind of difference this
+      # testbed exists to find before a real consumer does.
+      "contents": "read"
       "id-token": "write"
       "packages": "write"
 
