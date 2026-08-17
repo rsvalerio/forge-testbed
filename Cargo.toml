@@ -11,8 +11,24 @@ edition = "2021"
 rust-version = "1.80"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/rsvalerio/forge-testbed"
+# dist warns "The Homebrew publish job is enabled but no homepage was specified" without
+# this, and the formula it generates carries no `homepage` field. A real consumer would
+# ship that formula to users, so the testbed should not model the omission.
+homepage = "https://github.com/rsvalerio/forge-testbed"
 description = "Acceptance-test workspace for rsvalerio/forge's shared CI."
 authors = ["Rodrigo Valerio"]
+
+# dist builds with `--profile dist`, so the profile has to exist or the build step dies
+# with `error: profile `dist` is not defined` — after the plan job has already passed,
+# which makes it look like a build failure rather than a missing four lines of config.
+# `dist init` writes this block; this workspace was assembled by hand and never had it,
+# so no release from this repo has ever produced an artifact.
+#
+# Values match ops, deliberately: the testbed is meant to rehearse what real consumers
+# run, and a different profile here would rehearse the wrong build.
+[profile.dist]
+inherits = "release"
+lto = "thin"
 
 [workspace.dependencies]
 # Internal deps carry BOTH a path and a version. crates.io rejects bare path

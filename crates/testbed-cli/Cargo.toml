@@ -5,6 +5,7 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
+homepage.workspace = true
 description = "Binary crate of the forge testbed workspace: the artifact dist releases."
 authors.workspace = true
 

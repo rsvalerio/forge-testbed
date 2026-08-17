@@ -5,5 +5,6 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
+homepage.workspace = true
 description = "Leaf crate of the forge testbed workspace: no internal dependencies."
 authors.workspace = true
