@@ -1,8 +1,9 @@
 name: Bump
 
-# Exercises four capabilities in one run: mint-app-token, app-bot-identity,
-# signed-commit, and the tag + release dispatch. Three of the four bugs that reached ops's
-# release pipeline lived on this path and would have surfaced here.
+# Exercises five capabilities in one run: mint-app-token, app-bot-identity,
+# signed-commit, the tag + release dispatch, and the moving-major-tag repoint. Three of
+# the four bugs that reached ops's release pipeline lived on this path and would have
+# surfaced here.
 
 on:
   workflow_run:
@@ -22,6 +23,11 @@ jobs:
       # Composite actions load from this ref too, so the testbed is not silently running
       # main's workflow against v1's actions.
       forge-ref: main
+      # Exercise the repoint on a repo that is not forge. The testbed publishes its own
+      # `v1` for no consumer's benefit — the point is that the step runs on every release
+      # here first, including the create-on-first-use branch, before forge trusts it with
+      # the tag its real consumers pin.
+      major-tag: v1
       release-workflow: release.yml
       app-client-id: ${{ vars.GH_APP_CLIENT_ID }}
     secrets:
