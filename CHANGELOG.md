@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.1.2](https://github.com/rsvalerio/forge-testbed/compare/c12f9342633dac4d2206f88854ec48448089adf3..v0.1.2) - 2026-08-17
+#### Bug Fixes
+- (**dist**) define the dist profile so release builds can run (#4) - ([c12f934](https://github.com/rsvalerio/forge-testbed/commit/c12f9342633dac4d2206f88854ec48448089adf3)) - Rodrigo Valeri
+
+- - -
+
 ## [v0.1.1](https://github.com/rsvalerio/forge-testbed/compare/20b310ed3c51efe9070e62a88c529533a5cc484c..v0.1.1) - 2026-08-17
 #### Bug Fixes
 - (**release**) grant contents: read to the custom publish job (#3) - ([7084843](https://github.com/rsvalerio/forge-testbed/commit/70848438ef91543ebe34b4de4ceafc5b5ac65422)) - Rodrigo Valeri
