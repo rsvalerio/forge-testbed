@@ -1,0 +1,85 @@
+name: Tag drift
+
+# Step 4 of forge's tags-and-versions plan: fail loudly when forge's moving major
+# tag falls behind its newest release.
+#
+# This is the failure that started that plan. `v1` sat on `v0.1.2` while `v0.2.0`
+# shipped, so every consumer following forge's own advice — pin `@v1`, edit
+# nothing — silently kept running the older workflow. Nothing was red; the tag
+# was simply not moved. `ops` eventually noticed and worked around it with an
+# exact pin, which turned out not to pin the composite actions either.
+#
+# Since rsvalerio/forge#2 the repoint is automatic, so this is now a regression
+# test for that automation rather than insurance against a forgotten chore. It
+# keeps earning its place: the automation can only fire on releases cut *through*
+# the bump workflow, and a hand-cut tag or a skipped `major-tag` input still
+# leaves the same silent drift.
+#
+# It lives here rather than in forge because forge-testbed is where forge's own
+# machinery is exercised (PLAN.md §7). Both repos are public, so the run-scoped
+# GITHUB_TOKEN can read forge's tags with no App credentials involved.
+#
+# Scope limit worth stating: this checks that the **tag** is current. It says
+# nothing about whether consumers' **vendored config** is current — that is a
+# separate mechanism (`.forge-sync/`) and an independent failure mode.
+
+on:
+  schedule:
+    # Daily, at an off-peak minute. Drift is a slow failure; hourly would add
+    # noise without shortening the window that matters.
+    - cron: "13 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: v1 is level with the newest release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compare v1 against the newest release tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORGE: rsvalerio/forge
+          MAJOR: v1
+        run: |
+          set -euo pipefail
+
+          # `--paginate`: the tags endpoint returns 30 per page, so an unpaginated
+          # call starts silently missing the newest tags once the repo passes that
+          # count — and reports "no drift" while looking at a stale list.
+          latest="$(gh api --paginate "repos/${FORGE}/tags" --jq '.[].name' \
+            | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' \
+            | sort -V | tail -n1)"
+          if [ -z "$latest" ]; then
+            echo "::error::no vN.N.N tags found in ${FORGE}; nothing to compare against" >&2
+            exit 1
+          fi
+
+          # `/commits/<ref>` dereferences an annotated tag to the commit it points
+          # at, so this also catches a tag object nested inside a tag object — the
+          # shape `git tag -f` produces without a `^{}` peel.
+          want="$(gh api "repos/${FORGE}/commits/${latest}" --jq .sha)"
+          if ! have="$(gh api "repos/${FORGE}/commits/${MAJOR}" --jq .sha 2>/dev/null)"; then
+            echo "::error::${FORGE} has no ${MAJOR} tag. Consumers pinning @${MAJOR} cannot resolve it." >&2
+            exit 1
+          fi
+
+          echo "${MAJOR}=${have}  ${latest}=${want}"
+          {
+            echo "| ref | commit |"
+            echo "| --- | --- |"
+            echo "| \`${MAJOR}\` | \`${have}\` |"
+            echo "| \`${latest}\` (newest release) | \`${want}\` |"
+          } >>"$GITHUB_STEP_SUMMARY"
+
+          if [ "$want" != "$have" ]; then
+            echo "::error::${MAJOR} is stale: it points at ${have}, but the newest release ${latest} is ${want}." \
+                 "Every consumer pinning @${MAJOR} is running the older code." >&2
+            echo >>"$GITHUB_STEP_SUMMARY"
+            echo "**Stale.** Repoint with \`major-tag: ${MAJOR}\` on the next release, or by hand per forge's versioning.md." \
+              >>"$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "${MAJOR} is level with ${latest}" >>"$GITHUB_STEP_SUMMARY"
