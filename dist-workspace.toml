@@ -21,3 +21,13 @@ formula = "testbed-cli"
 # Same reasoning as ops: bump commits carry `[skip ci]`, GitHub applies that marker per
 # push event, and a tag push is a push event — so a tag-triggered release would never run.
 dispatch-releases = true
+# release.yml carries a hand-added `contents: read` on the custom publish job, because that
+# job delegates to forge's publish-homebrew.yml and a called workflow cannot request more
+# permission than its caller holds. dist does not emit that grant — it has no way to know
+# the custom job calls anything — so without `allow-dirty` a regeneration silently restores
+# a release.yml that fails at startup. See the comment at the job itself.
+#
+# Consequence, same as in ops: upgrading `cargo-dist-version` no longer updates release.yml
+# on its own. To take a new dist's CI changes, drop this key, run `dist init`, re-apply the
+# permission grant, and put the key back.
+allow-dirty = ["ci"]
