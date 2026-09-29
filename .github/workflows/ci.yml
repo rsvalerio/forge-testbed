@@ -14,3 +14,7 @@ on:
 jobs:
   rust:
     uses: rsvalerio/forge/.github/workflows/rust-ci.yml@main
+    with:
+      # Composite actions and mise.toml's tool pins load from this ref too, so the testbed
+      # is not silently running main's workflow against v1's actions.
+      forge-ref: main
