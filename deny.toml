@@ -18,6 +18,9 @@ db-urls = ["https://github.com/rustsec/advisory-db"]
 yanked = "warn"
 
 [licenses]
+# The allow-list is a shared baseline, so most of it goes unused in any one repo. Without
+# this, cargo-deny warns once per unused entry (`license-not-encountered`).
+unused-allowed-license = "allow"
 # Union of the two source allow-lists. Permissive and weak-copyleft only; anything
 # reciprocal (GPL, AGPL) must be an explicit per-repo exception with a written reason.
 allow = [

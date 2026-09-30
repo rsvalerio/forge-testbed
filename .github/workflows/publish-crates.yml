@@ -12,8 +12,12 @@ on:
   schedule:
     - cron: "42 5 * * *"
 
+# forge's publish-crates.yml declares `id-token: write` (Trusted Publishing's OIDC
+# exchange). A called workflow's permissions can only narrow its caller's, so without it
+# here every run fails at startup. A dry run never requests the token.
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   crates:
