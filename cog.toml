@@ -13,6 +13,9 @@ skip_ci = "[skip ci]"
 
 pre_bump_hooks = [
   "cargo set-version {{version}}",
+  # cog writes CHANGELOG.md (before these hooks run) without a final newline, which
+  # `ops verify`'s end-of-file check in forge's rust-ci rejects on the next push.
+  "sed -i -e '$a\\' CHANGELOG.md",
 ]
 
 # Deliberately empty, and forge's bump workflow now verifies that rather than assuming it.
